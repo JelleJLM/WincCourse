@@ -1,0 +1,51 @@
+__winc_id__ = 'ae539110d03e49ea8738fd413ac44ba8'
+__human_name__ = 'files'
+
+
+import os
+from zipfile import ZipFile
+
+
+def clean_cache():
+    if os.path.isdir('files\\cache'):
+        print('cache already exists, empty cache')
+        '''empty cache'''
+        for file in os.listdir('files\\cache'):
+            os.remove('files\\cache\\'+file) 
+    else:
+        os.makedirs('files\\cache')
+    return
+
+
+def cache_zip(zip_file_path:str='files\\data.zip',cache_dir_path:str='files\\cache'):
+    '''unpack indicated zip file in to clean cache'''
+    clean_cache()
+
+    with ZipFile (zip_file_path, 'r') as zipObj:
+        zipObj.extractall(path=cache_dir_path)
+    return
+
+
+def cached_files():
+    '''create list of absolute file paths'''
+    absolute_cache_path = os.path.abspath('files\\cache')
+    files_in_cach = []
+    for file in os.listdir('files\\cache'):
+            files_in_cach.append(absolute_cache_path+'\\'+file) 
+    return files_in_cach
+
+
+def find_password(search_list=cached_files()):
+    '''find and return the password'''
+    for file in search_list:
+        reader = open(file, 'r')
+        try:
+            text = reader.read()
+            if 'password' in text:
+                print(f'password found in {file}')
+                end_password = text.find('password')+10
+                found = text[end_password:text.find('\n', end_password)]
+                return found
+        finally:
+            reader.close()
+    return 'can not find password'
