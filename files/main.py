@@ -6,6 +6,12 @@ import os
 from zipfile import ZipFile
 
 
+def main():
+    cache_zip()
+    print(find_password(cached_files()))
+    return
+
+
 def clean_cache():
     if os.path.isdir('files\\cache'):
         print('cache already exists, empty cache')
@@ -35,7 +41,7 @@ def cached_files():
     return files_in_cach
 
 
-def find_password(search_list=cached_files()):
+def find_password(search_list):
     '''find and return the password'''
     for file in search_list:
         reader = open(file, 'r')
@@ -49,3 +55,7 @@ def find_password(search_list=cached_files()):
         finally:
             reader.close()
     return 'can not find password'
+
+
+if __name__ == '__main__':
+    main()
