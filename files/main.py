@@ -6,6 +6,11 @@ import os
 from zipfile import ZipFile
 
 
+padA = os.getcwd()
+cache_dir = os.path.join(padA, "cache")
+data_dir = os.path.join(padA, "data.zip")
+
+
 def main():
     cache_zip()
     print(find_password(cached_files()))
@@ -13,17 +18,18 @@ def main():
 
 
 def clean_cache():
-    if os.path.isdir('files\\cache'):
+    if os.path.isdir(cache_dir):
         print('cache already exists, empty cache')
         '''empty cache'''
-        for file in os.listdir('files\\cache'):
-            os.remove('files\\cache\\'+file) 
+        for file in os.listdir(cache_dir):
+            file_in_cache_dir = os.path.join(cache_dir, file)
+            os.remove(file_in_cache_dir) 
     else:
-        os.makedirs('files\\cache')
+        os.makedirs(cache_dir)
     return
 
 
-def cache_zip(zip_file_path:str='files\\data.zip',cache_dir_path:str='files\\cache'):
+def cache_zip(zip_file_path:str=data_dir,cache_dir_path:str=cache_dir):
     '''unpack indicated zip file in to clean cache'''
     clean_cache()
 
@@ -34,12 +40,12 @@ def cache_zip(zip_file_path:str='files\\data.zip',cache_dir_path:str='files\\cac
 
 def cached_files():
     '''create list of absolute file paths'''
-    absolute_cache_path = os.path.abspath('files\\cache')
+    absolute_cache_path = os.path.abspath('cache')
+    print('absolute cache path: ', absolute_cache_path)
     files_in_cach = []
-    for file in os.listdir('files\\cache'):
-            files_in_cach.append(absolute_cache_path+'\\'+file) 
+    for file in os.listdir(cache_dir):
+            files_in_cach.append(os.path.join(absolute_cache_path, file)) 
     return files_in_cach
-
 
 def find_password(search_list):
     '''find and return the password'''
